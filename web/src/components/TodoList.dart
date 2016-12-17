@@ -47,7 +47,9 @@ class TodoListComponent extends UiStatefulComponent<TodoListProps, TodoListState
     List tasks = [];
     if(this.props.todos.isNotEmpty){
       for(var task in this.props.todos) {
-        var item = (TodoListItem()..task =task)();
+        var item = (TodoListItem()
+          ..task =task
+          ..key=task.title)();
         tasks.add(item);
       }
       return tasks;
