@@ -35,7 +35,7 @@ class TodoListComponent extends UiStatefulComponent<TodoListProps, TodoListState
 
   @override
   render(){
-    return Dom.table()(
+    return (Dom.table()..className="pure-table")(
         TodoListHeader()(),
         Dom.tbody()(
           this.renderTasks()

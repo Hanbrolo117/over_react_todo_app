@@ -58,16 +58,27 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
 
 
   ReactElement renderActionSection(){
+
+    var buttonStyle = new Map();
+    buttonStyle["margin"] = "5px";
     if(this.state.isEditing){
       return Dom.td()(
-          Dom.button()("Save"),
-          Dom.button()("Cancel")
+          (Dom.button()
+            ..className="pure-button"
+            ..style=buttonStyle)("Save"),
+          (Dom.button()
+            ..className="pure-button"
+            ..style=buttonStyle)("Cancel")
       );
     }
 
     return Dom.td()(
-        Dom.button()("Edit"),
-        Dom.button()("Delete")
+        (Dom.button()
+          ..className="pure-button"
+          ..style=buttonStyle)("Edit"),
+        (Dom.button()
+          ..className="pure-button"
+          ..style=buttonStyle)("Delete")
     );
 
   }

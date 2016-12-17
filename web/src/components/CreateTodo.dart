@@ -36,15 +36,21 @@ class CreateTodoComponent extends UiStatefulComponent<CreateTodoProps, CreateTod
 
   @override
   render(){
-
+    var createTodoStyle = new Map();
+    createTodoStyle["marginBottom"] = "25px";
+    var buttonStyle = new Map();
+    buttonStyle["marginLeft"] = "10px";
     return (Dom.form()
-              ..className="createTaskForm"
-              ..onSubmit=this.props.createTaskFunc)(
+              ..className="pure-form"
+              ..onSubmit=this.props.createTaskFunc
+              ..style=createTodoStyle)(
         (Dom.input()
           ..type="text"
           ..placeholder="Task to complete?"
           ..ref="createInput")(),
-        Dom.button()("Create")
+        (Dom.button()
+          ..className="pure-button"
+          ..style=buttonStyle)("Create")
     );
   }
 
