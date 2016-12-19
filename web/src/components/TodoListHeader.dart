@@ -7,7 +7,10 @@ import 'package:over_react/over_react.dart';
 
 import 'Task.dart';
 
-
+///Use 'TodoListHeader' component to render the
+///header row of a table for a [TodoList] component
+///
+/// * Related to [TodoList]
 @Factory()
 UiFactory<TodoListHeaderProps> TodoListHeader;
 
