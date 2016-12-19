@@ -43,7 +43,7 @@ class AppComponent extends UiStatefulComponent<AppProps, AppState>{
 
   void deleteTask(String taskTitle){
     int task = this.findTask(taskTitle);
-    if(task != -1){
+    if(task > -1){
       this.state.todos.removeAt(task);
       this.sortTodos(this.state.sortState);
       this.setState(this.state);
@@ -52,11 +52,21 @@ class AppComponent extends UiStatefulComponent<AppProps, AppState>{
 
   void toggleTaskCompletion(String taskTitle){
     int task = this.findTask(taskTitle);
-    if(task != -1){
+    if(task > -1){
       this.state.todos[task].setIsCompleted(!this.state.todos[task].isCompleted);
       this.setState(this.state);
     }
 
+  }
+
+  int findTask(String taskTitle){
+    int task = -1;
+    for(int i=0; i<this.state.todos.length; i++){
+      if(this.state.todos[i].title == taskTitle){
+        task = i;
+      }
+    }
+    return task;
   }
 
   void sortTodos(int sortState){
@@ -81,16 +91,6 @@ class AppComponent extends UiStatefulComponent<AppProps, AppState>{
     }
   }
 
-  int findTask(String taskTitle){
-    int task = -1;
-    for(int i=0; i<this.state.todos.length; i++){
-      if(this.state.todos[i].title == taskTitle){
-        task = i;
-      }
-    }
-    return task;
-  }
-
   dynamic handleAlphaSort(react.SyntheticMouseEvent e){
     this.state.sortState = 0;
     this.sortTodos(0);
@@ -101,6 +101,15 @@ class AppComponent extends UiStatefulComponent<AppProps, AppState>{
     this.state.sortState = 1;
     this.sortTodos(1);
     this.setState(this.state);
+  }
+
+  void saveTask(String taskTitle, Task updatedTask){
+    int task = this.findTask(taskTitle);
+    if(task > -1){
+      this.state.todos[task] = updatedTask;
+      this.sortTodos(this.state.sortState);
+      this.setState(this.state);
+    }
   }
 
   @override
@@ -126,7 +135,8 @@ class AppComponent extends UiStatefulComponent<AppProps, AppState>{
         (TodoList()
           ..todos=this.state.todos
           ..deleteTask=this.deleteTask
-          ..toggleTaskCompletion=this.toggleTaskCompletion)()
+          ..toggleTaskCompletion=this.toggleTaskCompletion
+          ..saveTask=this.saveTask)()
 
     );
   }

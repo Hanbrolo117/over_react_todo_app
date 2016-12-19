@@ -13,13 +13,16 @@ UiFactory<TodoListItemProps> TodoListItem;
 @Props()
 class TodoListItemProps extends UiProps{
   Task task;
+  List<Task> todos;
   var deleteTask;
   var toggleTaskCompletion;
+  var saveTask;
 }
 
 @State()
 class TodoListItemState extends UiState{
   bool isEditing;
+  String editValue;
 }
 
 @Component()
@@ -50,6 +53,7 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
               (Dom.input()
                 ..type="text"
                 ..defaultValue=this.props.task.title
+                ..onChange=this.handleOnEditChange
                 ..ref="editInput")()
           )
       );
@@ -70,17 +74,20 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
       return Dom.td()(
           (Dom.button()
             ..className="pure-button pure-button-primary"
-            ..style=buttonStyle)("Save"),
+            ..style=buttonStyle
+            ..onClick=this.handleSave)("Save"),
           (Dom.button()
             ..className="pure-button"
-            ..style=buttonStyle)("Cancel")
+            ..style=buttonStyle
+            ..onClick=this.toggleEdit)("Cancel")
       );
     }
 
     return Dom.td()(
         (Dom.button()
           ..className="pure-button"
-          ..style=buttonStyle)("Edit"),
+          ..style=buttonStyle
+          ..onClick=this.toggleEdit)("Edit"),
         (Dom.button()
           ..className="button-warning pure-button"
           ..style=buttonStyle
@@ -104,6 +111,35 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
 
   dynamic handleDelete(react.SyntheticMouseEvent e){
     this.props.deleteTask(this.props.task.title);
+    return true;
+  }
+
+  dynamic toggleEdit(react.SyntheticMouseEvent e){
+    this.state.isEditing = !this.state.isEditing;
+    this.setState(this.state);
+  }
+
+  dynamic handleOnEditChange(react.SyntheticFormEvent e){
+    InputElement inputVal = this.ref("editInput");
+    if(inputVal == null){return true;}
+
+    this.state.editValue = inputVal.value;
+    this.setState(this.state);
+  }
+
+  dynamic handleSave(react.SyntheticMouseEvent e){
+    bool isValidTask = true;
+    for(var task in this.props.todos){
+      if(task.title == this.state.editValue){
+        isValidTask = false;
+      }
+    }
+    if(isValidTask && (this.state.editValue.isNotEmpty)) {
+      this.props.task.setTitle(this.state.editValue);
+      this.props.saveTask(this.props.task.title, this.props.task);
+      this.state.isEditing = !this.state.isEditing;
+      this.setState(this.state);
+    }
     return true;
   }
 
