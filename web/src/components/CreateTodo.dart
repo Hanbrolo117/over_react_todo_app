@@ -20,6 +20,7 @@ class CreateTodoProps extends UiProps{
 @State()
 class CreateTodoState extends UiState{
   var error;
+  String value;
 }
 
 @Component()
@@ -32,7 +33,9 @@ class CreateTodoComponent extends UiStatefulComponent<CreateTodoProps, CreateTod
   );
 
   @override
-  Map getInitialState() => (newState()..error = null);
+  Map getInitialState() => (newState()
+    ..error = null
+    ..value = "");
 
   @override
   render(){
@@ -42,11 +45,13 @@ class CreateTodoComponent extends UiStatefulComponent<CreateTodoProps, CreateTod
     buttonStyle["marginLeft"] = "10px";
     return (Dom.form()
               ..className="pure-form"
-              ..onSubmit=this.props.createTaskFunc
+              ..onSubmit= this.handleOnSubmit
+              ..onChange= this.handleOnChange
               ..style=createTodoStyle)(
         (Dom.input()
           ..type="text"
           ..placeholder="Task to complete?"
+          ..value=this.state.value
           ..ref="createInput")(),
         (Dom.button()
           ..className="pure-button"
@@ -55,7 +60,29 @@ class CreateTodoComponent extends UiStatefulComponent<CreateTodoProps, CreateTod
   }
 
 
-  void handleOnChange(){
 
+  dynamic handleOnChange(react.SyntheticFormEvent e){
+    InputElement val = this.ref("createInput");
+    this.state.value = val.value;
+    this.setState(this.state);
+  }
+
+  dynamic handleOnSubmit(react.SyntheticFormEvent e){
+    e.preventDefault();
+    bool isValidTask = true;
+    for(var task in this.props.todos){
+      if(task.title == this.state.value){
+        isValidTask = false;
+      }
+    }
+    if(isValidTask && (this.state.value.isNotEmpty)) {
+      var taskTitle = this.state.value;
+      int timeStamp = this.props.todos.length+1;
+      Task newTask = new Task(timeStamp,title: taskTitle);
+      this.props.createTaskFunc(newTask);
+      this.state.value = "";
+      this.setState(this.state);
+    }
+    return true;
   }
 }

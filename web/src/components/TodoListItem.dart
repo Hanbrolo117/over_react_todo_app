@@ -13,6 +13,8 @@ UiFactory<TodoListItemProps> TodoListItem;
 @Props()
 class TodoListItemProps extends UiProps{
   Task task;
+  var deleteTask;
+  var toggleTaskCompletion;
 }
 
 @State()
@@ -52,7 +54,10 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
           )
       );
     }
-    return (Dom.td()..style=taskStyle)(this.props.task.title);
+    return (Dom.td()
+      ..style=taskStyle
+      ..onClick=this.handleTaskCompletion
+      )(this.props.task.title);
     //---------------------------------------------------------------
   }
 
@@ -64,7 +69,7 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
     if(this.state.isEditing){
       return Dom.td()(
           (Dom.button()
-            ..className="pure-button"
+            ..className="pure-button pure-button-primary"
             ..style=buttonStyle)("Save"),
           (Dom.button()
             ..className="pure-button"
@@ -77,8 +82,9 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
           ..className="pure-button"
           ..style=buttonStyle)("Edit"),
         (Dom.button()
-          ..className="pure-button"
-          ..style=buttonStyle)("Delete")
+          ..className="button-warning pure-button"
+          ..style=buttonStyle
+          ..onClick=this.handleDelete)("Delete")
     );
 
   }
@@ -90,4 +96,15 @@ class TodoListItemComponent extends UiStatefulComponent<TodoListItemProps,TodoLi
         this.renderActionSection()
     );
   }
+
+  dynamic handleTaskCompletion(react.SyntheticMouseEvent e){
+    this.props.toggleTaskCompletion(this.props.task.title);
+    return true;
+  }
+
+  dynamic handleDelete(react.SyntheticMouseEvent e){
+    this.props.deleteTask(this.props.task.title);
+    return true;
+  }
+
 }

@@ -16,6 +16,8 @@ UiFactory<TodoListProps> TodoList;
 @Props()
 class TodoListProps extends UiProps{
   List<Task> todos;
+  var deleteTask;
+  var toggleTaskCompletion;
 }
 
 @State()
@@ -49,7 +51,9 @@ class TodoListComponent extends UiStatefulComponent<TodoListProps, TodoListState
       for(var task in this.props.todos) {
         var item = (TodoListItem()
           ..task =task
-          ..key=task.title)();
+          ..key=task.title
+          ..deleteTask=this.props.deleteTask
+          ..toggleTaskCompletion=this.props.toggleTaskCompletion)();
         tasks.add(item);
       }
       return tasks;
